@@ -9,7 +9,9 @@ services:
   # -- Required for a fully featured installation of balenaSound
   # -- Mutiroom services can be removed if not using multiroom mode
   audio:
-    build: ./core/audio
+    build:
+      context: ./core/audio
+      dockerfile: ./Dockerfile.template
     privileged: true
     labels:
       io.balena.features.dbus: 1
@@ -27,7 +29,9 @@ services:
       io.balena.features.supervisor-api: 1
 
   multiroom-server:
-    build: ./core/multiroom/server
+    build:
+      context: ./core/multiroom/server
+      dockerfile: ./Dockerfile.template
     restart: on-failure
     ports:
       - 1704:1704
@@ -35,7 +39,9 @@ services:
       - 1780:1780
 
   multiroom-client:
-    build: ./core/multiroom/client
+    build: 
+      context: ./core/multiroom/client
+      dockerfile: ./Dockerfile.template
     restart: on-failure
 
   logging:
@@ -53,7 +59,9 @@ services:
   # -- Additional plugins can be added. See https://sound.balenalabs.io/docs/plugins.
   # -- Remove unwanted plugins as needed
   bluetooth:
-    build: ./plugins/bluetooth
+    build:
+      context: ./plugins/bluetooth
+      dockerfile: ./Dockerfile.template
     restart: on-failure
     network_mode: host
     cap_add:
@@ -62,17 +70,21 @@ services:
       io.balena.features.dbus: 1
 
   airplay:
-    build: ./plugins/airplay
+    build:
+      context: ./plugins/airplay
+      dockerfile: ./Dockerfile.template
     restart: on-failure
     network_mode: host
     privileged: true
     labels:
       io.balena.features.dbus: 1
 
-  spotify:
-    build: ./plugins/spotify
-    restart: on-failure
-    privileged: true
-    network_mode: host
-    volumes:
-      - spotifycache:/var/cache/raspotify
+#  spotify:
+#    build:
+#      context: ./plugins/spotify
+#      dockerfile: ./Dockerfile.template
+#    restart: on-failure
+#    privileged: true
+#    network_mode: host
+#    volumes:
+#      - spotifycache:/var/cache/raspotify
